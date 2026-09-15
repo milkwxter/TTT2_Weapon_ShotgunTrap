@@ -7,13 +7,19 @@ DEFINE_BASECLASS("weapon_tttbase")
 SWEP.HoldType = "normal"
 
 if CLIENT then
-    SWEP.PrintName = "Shotgun Trap"
+    SWEP.PrintName = "ttt_label_shotgun_trap_name"
     SWEP.Slot = 2
 
     SWEP.ViewModelFlip = false
     SWEP.ViewModelFOV = 69
 
     SWEP.Icon = "vgui/ttt/icon_shotgun_trap"
+
+	SWEP.EquipMenuData = {
+		type = "item_weapon",
+		name = "ttt_label_shotgun_trap_name",
+		desc = "ttt_label_shotgun_trap_desc"
+	}
 end
 
 SWEP.Base = "weapon_tttbase"
@@ -116,4 +122,9 @@ if CLIENT then
 			self.modelPreview:Remove()
 		end
 	end
+	
+    function SWEP:Initialize()
+        self:AddTTT2HUDHelp("ttt2_label_shotgun_trap_help")
+        BaseClass.Initialize(self)
+    end
 end

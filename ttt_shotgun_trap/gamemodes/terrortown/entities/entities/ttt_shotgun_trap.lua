@@ -6,7 +6,7 @@ DEFINE_BASECLASS("ttt_base_placeable")
 
 if CLIENT then
     ENT.Icon = "vgui/ttt/icon_shotgun_trap"
-    ENT.PrintName = "Shotgun Trap"
+    ENT.PrintName = "ttt_label_shotgun_trap_name"
 end
 
 ENT.Base = "ttt_base_placeable"
@@ -24,11 +24,11 @@ function ENT:Initialize()
     self:SetCollisionBounds(Vector(-b, -b, -b), Vector(b, b, b))
 
     if SERVER then
-        self:SetMaxHealth(200)
+        self:SetMaxHealth(250)
 
         local phys = self:GetPhysicsObject()
         if IsValid(phys) then
-            phys:SetMass(300)
+            phys:SetMass(250)
         end
 
         self:SetUseType(SIMPLE_USE)
@@ -38,7 +38,7 @@ end
 if SERVER then
 	-- shoot people
 	function ENT:Think()
-		self:NextThink( CurTime() + 0.4 )
+		self:NextThink( CurTime() + 0.5 )
 		
 		local muzzlePos = self:GetPos()
 		local dir = self:GetForward()
@@ -55,6 +55,7 @@ if SERVER then
 		return true
 	end
 	
+	-- le bullet function
 	function ENT:ShootAtPlayer()
 		local shootFromHere = self:GetPos() + Vector(0, 0, 60) + (self:GetForward() * 50)
 		local bullet = {}
@@ -63,7 +64,7 @@ if SERVER then
 		bullet.Dir = self:GetForward()
 		bullet.Spread = Vector(0.67, 0.67, 0)
 		bullet.Distance = 300
-		bullet.Damage = 14
+		bullet.Damage = 16
 		bullet.Tracer = 1
 		bullet.TracerName = "shotgun_trap_tracer"
 		bullet.Force = 10
@@ -81,7 +82,7 @@ if CLIENT then
     hook.Add("TTTRenderEntityInfo", "HUDDrawTargetID_ShotgunTrap", function(tData)
         local client = LocalPlayer()
         local ent = tData:GetEntity()
-
+		
         if
             not IsValid(client)
             or not client:IsTerror()
@@ -97,12 +98,17 @@ if CLIENT then
         tData:EnableText()
         tData:EnableOutline()
         tData:SetOutlineColor(Color(255, 0, 0 ))
-
+		
+		-- name of entity
         tData:SetTitle(TryT(ent.PrintName))
         
 		-- traitors can see ammo left
-		--tData:SetSubtitle(TryT("awdasdasdfasd"))
+		local clientTeam = client:GetRealTeam()
+		if clientTeam == TEAM_TRAITOR then
+			tData:AddDescriptionLine(ParT("ttt2_label_shotgun_trap_targetid_ammo", {ammo = "TODO"}))
+		end
 		
-		tData:AddDescriptionLine("Trap health: " .. ent:Health())
+		-- everyone can see current health of trap
+		tData:AddDescriptionLine(ParT("ttt2_label_shotgun_trap_targetid_health", {health = ent:Health()}))
     end)
 end
