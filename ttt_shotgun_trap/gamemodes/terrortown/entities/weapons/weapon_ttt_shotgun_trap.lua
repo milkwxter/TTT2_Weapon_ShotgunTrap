@@ -1,10 +1,18 @@
 if SERVER then
 	AddCSLuaFile()
+	
+	resource.AddFile("materials/vgui/ttt/icon_shotgun_trap.vmt")
+	
+	-- server convars
+	CreateConVar("ttt2_shotguntrap_enable_ammo", 1, { FCVAR_NOTIFY, FCVAR_ARCHIVE }, "Enable limited ammo for the shotgun trap?", 0, 1)
+	CreateConVar("ttt2_shotguntrap_default_ammo", 10, { FCVAR_NOTIFY, FCVAR_ARCHIVE }, "Amount of ammo shotgun traps spawn with.", 1, 30)
+	CreateConVar("ttt2_shotguntrap_default_health", 250, { FCVAR_NOTIFY, FCVAR_ARCHIVE }, "Amount of health shotgun traps spawn with.", 10, 500)
+	CreateConVar("ttt2_shotguntrap_bullet_damage", 16, { FCVAR_NOTIFY, FCVAR_ARCHIVE }, "How much damage does a single pellet from the trap deal?", 1, 100)
 end
 
 DEFINE_BASECLASS("weapon_tttbase")
 
-SWEP.HoldType = "normal"
+SWEP.HoldType = "melee"
 
 if CLIENT then
     SWEP.PrintName = "ttt_label_shotgun_trap_name"
@@ -45,7 +53,7 @@ SWEP.Spawnable = false
 
 SWEP.AllowDrop = false
 
-SWEP.ViewModel = "models/weapons/v_crowbar.mdl"
+SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 
 SWEP.EntityToSpawn = "ttt_shotgun_trap"
@@ -54,6 +62,11 @@ SWEP.EntityToSpawnsModel = "models/shotgun_trap/tur3.mdl"
 local MAX_DISTANCE = 100
 
 if SERVER then
+	-- remove on death or drop (no one should pick it up)
+	function SWEP:OnDrop()
+		self:Remove()
+	end
+	
 	function SWEP:PrimaryAttack()
 		if not IsValid(self.Owner) then return end
 		
@@ -86,6 +99,7 @@ if SERVER then
 end
 
 if CLIENT then
+	-- stop client from thinking we are a gun and shooting a single bullet when placing a trap
 	function SWEP:PrimaryAttack() end
 	
 	function SWEP:Think()
@@ -110,6 +124,7 @@ if CLIENT then
         end
     end
 	
+	-- hide the model preview when it makes sense
 	function SWEP:Holster()
 		if IsValid(self.modelPreview) then
 			self.modelPreview:Remove()
@@ -123,6 +138,7 @@ if CLIENT then
 		end
 	end
 	
+	-- ttt2 help on HUD incase you dont know how to use it
     function SWEP:Initialize()
         self:AddTTT2HUDHelp("ttt2_label_shotgun_trap_help")
         BaseClass.Initialize(self)
