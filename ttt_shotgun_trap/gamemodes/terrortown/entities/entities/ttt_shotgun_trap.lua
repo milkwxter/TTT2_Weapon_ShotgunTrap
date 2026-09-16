@@ -37,7 +37,7 @@ function ENT:Initialize()
             phys:SetMass(250)
         end
 		
-		self.MuzzleOffset = self:GetPos() + Vector(0, 0, 60) + (self:GetForward() * 50)
+		self.MuzzleOffset = self:GetPos() + Vector(0, 0, 60) + (self:GetForward() * 45)
     end
 end
 
