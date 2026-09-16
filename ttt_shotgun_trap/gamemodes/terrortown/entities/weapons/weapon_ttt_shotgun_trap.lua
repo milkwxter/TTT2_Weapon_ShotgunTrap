@@ -6,7 +6,7 @@ if SERVER then
 	-- server convars
 	CreateConVar("ttt2_shotguntrap_enable_ammo", 1, { FCVAR_NOTIFY, FCVAR_ARCHIVE }, "Enable limited ammo for the shotgun trap?", 0, 1)
 	CreateConVar("ttt2_shotguntrap_default_ammo", 10, { FCVAR_NOTIFY, FCVAR_ARCHIVE }, "Amount of ammo shotgun traps spawn with.", 1, 30)
-	CreateConVar("ttt2_shotguntrap_default_health", 250, { FCVAR_NOTIFY, FCVAR_ARCHIVE }, "Amount of health shotgun traps spawn with.", 10, 500)
+	CreateConVar("ttt2_shotguntrap_default_health", 250, { FCVAR_NOTIFY, FCVAR_ARCHIVE }, "Amount of health shotgun traps spawn with.", 10, 1000)
 	CreateConVar("ttt2_shotguntrap_bullet_damage", 16, { FCVAR_NOTIFY, FCVAR_ARCHIVE }, "How much damage does a single pellet from the trap deal?", 1, 100)
 end
 
@@ -88,6 +88,7 @@ if SERVER then
 			ent:SetAngles(Angle(0, self.Owner:EyeAngles().y, 0))
 			ent:Spawn()
 			ent:Activate()
+			ent:SetOriginator(self:GetOwner())
 			
 			local phys = ent:GetPhysicsObject()
 			if IsValid(phys) then
@@ -143,4 +144,39 @@ if CLIENT then
         self:AddTTT2HUDHelp("ttt2_label_shotgun_trap_help")
         BaseClass.Initialize(self)
     end
+	
+	-- ttt2 f1 menu convar support
+	function SWEP:AddToSettingsMenu(parent)
+		local form = vgui.CreateTTT2Form(parent, "header_equipment_additional")
+		
+		ammoEnabled = form:MakeCheckBox({
+			serverConvar = "ttt2_shotguntrap_enable_ammo",
+			label = "ttt2_label_shotgun_trap_convar_enable_ammo",
+		})
+		
+		form:MakeSlider({
+			serverConvar = "ttt2_shotguntrap_default_ammo",
+			label = "ttt2_label_shotgun_trap_convar_ammo",
+			min = 1,
+			max = 30,
+			decimal = 0,
+			master = ammoEnabled,
+		})
+		
+		form:MakeSlider({
+			serverConvar = "ttt2_shotguntrap_default_health",
+			label = "ttt2_label_shotgun_trap_convar_health",
+			min = 10,
+			max = 1000,
+			decimal = 0,
+		})
+		
+		form:MakeSlider({
+			serverConvar = "ttt2_shotguntrap_bullet_damage",
+			label = "ttt2_label_shotgun_trap_convar_bullet_damage",
+			min = 1,
+			max = 100,
+			decimal = 0,
+		})
+	end
 end

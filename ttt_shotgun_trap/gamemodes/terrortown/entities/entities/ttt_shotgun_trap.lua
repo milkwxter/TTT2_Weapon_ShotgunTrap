@@ -14,8 +14,6 @@ ENT.Model = "models/shotgun_trap/tur3.mdl"
 
 ENT.CanHavePrints = false
 
-ENT.MuzzleOffset
-
 function ENT:Initialize()
     self:SetModel(self.Model)
 
@@ -24,10 +22,12 @@ function ENT:Initialize()
     local b = 32
 
     self:SetCollisionBounds(Vector(-b, -b, -b), Vector(b, b, b))
+	
+	local healthConvar = GetConVar("ttt2_shotguntrap_default_health"):GetInt()
+	self:SetHealth(healthConvar)
 
     if SERVER then
-        self:SetMaxHealth(250)
-        self:SetHealth(250)
+        self:SetMaxHealth(healthConvar)
 		
 		local ammo = GetConVar("ttt2_shotguntrap_default_ammo"):GetInt()
 		self:SetNWInt("shotguntrap_ammo", ammo or 10)
@@ -69,6 +69,9 @@ if SERVER then
 	
 	-- le bullet function
 	function ENT:ShootAtPlayer()
+		-- get convar
+		local damageConvar = GetConVar("ttt2_shotguntrap_bullet_damage"):GetInt()
+		
 		-- create the bullet table
 		local bullet = {}
 		bullet.Num = 25
@@ -76,7 +79,7 @@ if SERVER then
 		bullet.Dir = self:GetForward()
 		bullet.Spread = Vector(0.67, 0.67, 0)
 		bullet.Distance = 300
-		bullet.Damage = 16
+		bullet.Damage = damageConvar
 		bullet.Tracer = 1
 		bullet.TracerName = "shotgun_trap_tracer"
 		bullet.Force = 10
