@@ -129,11 +129,13 @@ if CLIENT then
         then
             return
         end
+		
+		local traitorRed = Color(255, 0, 0)
 
         -- enable targetID rendering
         tData:EnableText()
         tData:EnableOutline()
-        tData:SetOutlineColor(Color(255, 0, 0))
+        tData:SetOutlineColor(traitorRed)
 		
 		-- name of entity
         tData:SetTitle(TryT(ent.PrintName))
@@ -142,7 +144,7 @@ if CLIENT then
 		local ammoEnabled = GetConVar("ttt2_shotguntrap_enable_ammo"):GetBool()
 		if ammoEnabled then
 			if client:GetRealTeam() == TEAM_TRAITOR then
-				tData:AddDescriptionLine(ParT("ttt2_label_shotgun_trap_targetid_ammo", {ammo = ent:GetCurrentAmmo()}))
+				tData:AddDescriptionLine(ParT("ttt2_label_shotgun_trap_targetid_ammo", {ammo = ent:GetCurrentAmmo()}), traitorRed, {ROLE_TRAITOR.iconMaterial})
 			end
 		end
 		
