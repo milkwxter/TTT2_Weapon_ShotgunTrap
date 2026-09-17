@@ -13,7 +13,7 @@ L["ttt2_label_shotgun_trap_help"] = "Place Shotgun Trap"
 
 -- TTT2 TARGET ID
 L["ttt2_label_shotgun_trap_targetid_health"] = "Shotgun trap health: {health}"
-L["ttt2_label_shotgun_trap_targetid_ammo"] = "Ammo left: {ammo}"
+L["ttt2_label_shotgun_trap_targetid_ammo"] = "Ammo left: {ammo} (TRAITOR ONLY)"
 
 -- TTT2 CONVARS
 L["ttt2_label_shotgun_trap_convar_enable_ammo"] = "Enable limited ammo for the shotgun trap?"

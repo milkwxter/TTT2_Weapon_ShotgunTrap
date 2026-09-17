@@ -14,6 +14,9 @@ ENT.Model = "models/shotgun_trap/tur3.mdl"
 
 ENT.CanHavePrints = false
 
+-- head chest and feet fractions for the lovely LOS check
+local LOS_FRACTIONS = {1.0, 0.5, 0.1}
+
 function ENT:Initialize()
     self:SetModel(self.Model)
 
@@ -58,13 +61,42 @@ if SERVER then
 		for _, ent in ipairs(ents.FindInCone(muzzlePos, dir, range, angle)) do
 			if not ent:IsValid() then continue end
 			if ent:IsPlayer() and ent:IsActive() then
-				-- return early and shoot pellets if we find ANYONE AT ALL
+				-- custom LOS check
+				if not self:LineOfSightCheck(ent) then continue end
+				
+				-- return early and shoot pellets if we find SOMEONE TO SHOOT
 				self:ShootAtPlayer()
 				return true
 			end
 		end
 		
 		return true
+	end
+	
+	function ENT:LineOfSightCheck(ply)
+		local muzzlePos = self.MuzzleOffset
+		
+		local mins, maxs = ply:GetHull()
+		local pos = ply:GetPos()
+		
+		for _, frac in ipairs(LOS_FRACTIONS) do
+			local targetPos = pos + Vector(0, 0, Lerp(frac, mins.z, maxs.z))
+			
+			local tr = util.TraceLine({
+				start = muzzlePos,
+				endpos = targetPos,
+				filter = {self, ply},
+				mask = MASK_SHOT,
+			})
+			
+			PrintTable(tr)
+			
+			if not tr.Hit or tr.Entity == ply then
+				return true
+			end
+		end
+		
+		return false
 	end
 	
 	-- le bullet function
@@ -144,7 +176,7 @@ if CLIENT then
 		local ammoEnabled = GetConVar("ttt2_shotguntrap_enable_ammo"):GetBool()
 		if ammoEnabled then
 			if client:GetRealTeam() == TEAM_TRAITOR then
-				tData:AddDescriptionLine(ParT("ttt2_label_shotgun_trap_targetid_ammo", {ammo = ent:GetCurrentAmmo()}), traitorRed, {ROLE_TRAITOR.iconMaterial})
+				tData:AddDescriptionLine(ParT("ttt2_label_shotgun_trap_targetid_ammo", {ammo = ent:GetCurrentAmmo()}), traitorRed)
 			end
 		end
 		
