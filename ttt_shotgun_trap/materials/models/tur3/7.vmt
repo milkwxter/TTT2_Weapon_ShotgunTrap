@@ -1,7 +1,6 @@
 "VertexlitGeneric"
 {
 	"$basetexture" "models\tur3\7"
-	"$normalmap" "models\tur3\nr"
 }
 
 
