@@ -4,12 +4,12 @@ if SERVER then
 	resource.AddFile("materials/vgui/ttt/icon_shotgun_trap.vmt")
 	
 	-- server convars
-	CreateConVar("ttt2_shotguntrap_enable_ammo", 1, { FCVAR_NOTIFY, FCVAR_ARCHIVE }, "Enable limited ammo for the shotgun trap?", 0, 1)
 	CreateConVar("ttt2_shotguntrap_default_ammo", 16, { FCVAR_NOTIFY, FCVAR_ARCHIVE }, "Amount of ammo shotgun traps spawn with.", 1, 30)
 	CreateConVar("ttt2_shotguntrap_bullet_damage", 16, { FCVAR_NOTIFY, FCVAR_ARCHIVE }, "How much damage does a single pellet from the trap deal?", 1, 100)
 end
 
 -- shared convar
+CreateConVar("ttt2_shotguntrap_enable_ammo", 1, { FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED }, "Enable limited ammo for the shotgun trap?", 0, 1)
 CreateConVar("ttt2_shotguntrap_default_health", 200, { FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED }, "Amount of health shotgun traps spawn with.", 10, 1000)
 
 DEFINE_BASECLASS("weapon_tttbase")
