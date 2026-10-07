@@ -89,8 +89,6 @@ if SERVER then
 				mask = MASK_SHOT,
 			})
 			
-			PrintTable(tr)
-			
 			if not tr.Hit or tr.Entity == ply then
 				return true
 			end
