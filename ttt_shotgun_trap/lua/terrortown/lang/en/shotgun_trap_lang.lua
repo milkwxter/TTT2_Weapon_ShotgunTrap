@@ -9,11 +9,11 @@ It will fire at anyone who stands in front of it. Even you. And your traitor fri
 It has limited range, but it shreds terrorists.]]
 
 -- TTT2 HELP
-L["ttt2_label_shotgun_trap_help"] = "Place Shotgun Trap"
+L["ttt2_label_shotgun_trap_help"] = "Place the Shotgun Trap"
 
 -- TTT2 TARGET ID
 L["ttt2_label_shotgun_trap_targetid_health"] = "Shotgun trap health: {health}"
-L["ttt2_label_shotgun_trap_targetid_ammo"] = "Ammo left: {ammo} (TRAITOR ONLY)"
+L["ttt2_label_shotgun_trap_targetid_ammo"] = "Ammo left: {ammo} (Visible for your role)"
 
 -- TTT2 CONVARS
 L["ttt2_label_shotgun_trap_convar_enable_ammo"] = "Enable limited ammo for the shotgun trap?"

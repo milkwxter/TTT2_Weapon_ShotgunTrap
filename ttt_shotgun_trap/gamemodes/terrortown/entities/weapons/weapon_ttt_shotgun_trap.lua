@@ -61,7 +61,7 @@ SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
 SWEP.EntityToSpawn = "ttt_shotgun_trap"
 SWEP.EntityToSpawnsModel = "models/shotgun_trap/tur3.mdl"
 
-local MAX_DISTANCE = 100
+local MAX_DISTANCE = 125
 
 if SERVER then
 	-- remove on death or drop (no one should pick it up)
@@ -97,6 +97,11 @@ if SERVER then
 				phys:EnableMotion(false)
 				phys:Sleep()
 			end
+			
+			local mvObject = ent:AddMarkerVision("mv_shotgun_trap")
+			mvObject:SetOwner(ROLE_TRAITOR)
+			mvObject:SetVisibleFor(VISIBLE_FOR_ROLE)
+			mvObject:SyncToClients()
 		end
 	end
 end
@@ -117,9 +122,9 @@ if CLIENT then
 			local dist = tr.StartPos:Distance(tr.HitPos)
 			
 			if dist > MAX_DISTANCE then
-				self.modelPreview:SetColor(Color(255, 0, 0, 150))
+				self.modelPreview:SetColor(Color(255, 0, 0, 125))
 			else
-				self.modelPreview:SetColor(Color(0, 255, 255, 150))
+				self.modelPreview:SetColor(Color(0, 255, 0, 125))
 			end
 			
             self.modelPreview:SetPos(tr.HitPos)

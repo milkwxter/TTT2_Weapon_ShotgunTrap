@@ -133,6 +133,11 @@ if SERVER then
 		ammo = ammo - 1
         self:SetNWInt("shotguntrap_ammo", ammo)
     end
+	
+	-- remove our marker vision 100% of the time
+	function ENT:OnRemove()
+		self:RemoveMarkerVision("mv_shotgun_trap")
+	end
 end
 
 -- shared getter for ammo
@@ -181,4 +186,36 @@ if CLIENT then
 		-- everyone can see current health of trap
 		tData:AddDescriptionLine(ParT("ttt2_label_shotgun_trap_targetid_health", {health = ent:Health()}))
     end)
+end
+
+-- marker vision for teammates
+if CLIENT then
+	local materialTrap = Material("vgui/ttt/marker_vision/shotgun_trap_markervision")
+    local TryT = LANG.TryTranslation
+    local ParT = LANG.GetParamTranslation
+	
+	hook.Add("TTT2RenderMarkerVisionInfo", "HUDDrawMarkerVision_ShotgunTrap", function(mvData)
+		local ent = mvData:GetEntity()
+		local mvObject = mvData:GetMarkerVisionObject()
+
+		if not mvObject:IsObjectFor(ent, "mv_shotgun_trap") then return end
+
+		local owner = ent:GetOriginator()
+		local nick = IsValid(owner) and owner:Nick() or "???"
+
+		mvData:EnableText()
+
+		mvData:SetTitle(TryT(ent.PrintName))
+
+		mvData:AddDescriptionLine(ParT("marker_vision_owner", { owner = nick }))
+
+		mvData:AddDescriptionLine(TryT(mvObject:GetVisibleForTranslationKey()), COLOR_SLATEGRAY)
+
+		local color = COLOR_WHITE
+
+		mvData:AddIcon(
+			materialTrap,
+			(mvData:IsOffScreen() or not mvData:IsOnScreenCenter()) and COLOR_WHITE
+		)
+	end)
 end
